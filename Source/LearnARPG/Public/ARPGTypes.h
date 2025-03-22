@@ -15,6 +15,7 @@ enum class EARPGInputs : uint8
 	Run,
 	Crouch,
 	PrimaryAttack,
+	SecondaryAttack,
 	PrimarySkill,
 	SecondarySkill,
 	Prop1,

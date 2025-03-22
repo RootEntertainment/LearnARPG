@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "ARPGTypes.h"
 #include "Abilities/GameplayAbility.h"
+#include "ARPGAbilityTypes.h"
 #include "ARPGGameplayAbility.generated.h"
+
 
 class AARPGCharacterBase;
 /**
@@ -41,4 +43,7 @@ public:
 	void OnUnslottedAbility();
 protected:
 	int32 GetSuffixNumber(const FString& InString);
+
+	UFUNCTION(BlueprintCallable,Category="ARPGAbility")
+	TArray<FActiveGameplayEffectHandle> ApplyGameplayEffects(const FGameplayEventData& EventData, const FARPGGameplayEffectContainer& EffectContainer);
 };

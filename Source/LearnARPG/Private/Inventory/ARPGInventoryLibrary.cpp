@@ -79,6 +79,7 @@ bool UARPGInventoryLibrary::ConsumeItemsInInventory(UARPGInventory* Inventory, c
 	if(Count == 0 || ItemData.Count == Count)
 	{
 		Inventory->RemoveItem(ItemData);
+		ItemData.Inventory = nullptr;
 		//TODO: Remove Item Data
 	}
 	

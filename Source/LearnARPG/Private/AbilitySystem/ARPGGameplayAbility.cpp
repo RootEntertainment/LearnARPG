@@ -2,8 +2,9 @@
 
 
 #include "AbilitySystem/ARPGGameplayAbility.h"
-
+#include "AbilitySystemGlobals.h"
 #include "ARPGCharacterBase.h"
+//#include "Item/ARPGWeapon.h"
 
 
 UARPGGameplayAbility::UARPGGameplayAbility()
@@ -97,4 +98,25 @@ int32 UARPGGameplayAbility::GetSuffixNumber(const FString& InString)
 		}
 	}
 	return -1;
+}
+
+TArray<FActiveGameplayEffectHandle> UARPGGameplayAbility::ApplyGameplayEffects(const FGameplayEventData& EventData,
+	const FARPGGameplayEffectContainer& EffectContainer)
+{
+	TArray<FActiveGameplayEffectHandle> AllEffects;
+	
+	UAbilitySystemComponent* TargetComponent = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(EventData.Target);
+
+	if(TargetComponent)
+	{
+		for (auto& GameplayEffectClass : EffectContainer.TargetGameplayEffectClasses)
+		{
+			FGameplayEffectSpecHandle EffectSpec = MakeOutgoingGameplayEffectSpec(GameplayEffectClass);
+			
+			AllEffects.Add(GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), TargetComponent));
+		}
+	}
+	// Iterate list of effect specs and apply them to their target data
+	
+	return AllEffects;
 }

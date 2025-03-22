@@ -23,7 +23,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	int Level = 1;
 	
-	//UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable)
 	void InitializeFromItemGID(FGuid InGID);
 protected:
 	bool bInitialized;
