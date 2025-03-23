@@ -18,4 +18,9 @@ public:
 	{
 		ItemType = FPrimaryAssetType("Skill");
 	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	EARPGWeapons AllowWeaponType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Effects)
+	TMap<FGameplayTag, FARPGGameplayEffectContainer> SkillEffects;
 };

@@ -101,7 +101,7 @@ int32 UARPGGameplayAbility::GetSuffixNumber(const FString& InString)
 }
 
 TArray<FActiveGameplayEffectHandle> UARPGGameplayAbility::ApplyGameplayEffects(const FGameplayEventData& EventData,
-	const FARPGGameplayEffectContainer& EffectContainer)
+	const FARPGGameplayEffectContainer& EffectContainer, const TArray<FARPGSetByCaller> SetByCallers)
 {
 	TArray<FActiveGameplayEffectHandle> AllEffects;
 	
@@ -111,7 +111,13 @@ TArray<FActiveGameplayEffectHandle> UARPGGameplayAbility::ApplyGameplayEffects(c
 	{
 		for (auto& GameplayEffectClass : EffectContainer.TargetGameplayEffectClasses)
 		{
-			FGameplayEffectSpecHandle EffectSpec = MakeOutgoingGameplayEffectSpec(GameplayEffectClass);
+			//这里会将Ability的SetByCaller复制给GameplayEffect
+			FGameplayEffectSpecHandle EffectSpec = MakeOutgoingGameplayEffectSpec(GameplayEffectClass, GetAbilityLevel());
+			FGameplayEffectSpec* Spec = EffectSpec.Data.Get();
+			for(auto& SetByCaller : SetByCallers)
+			{
+				Spec->SetSetByCallerMagnitude(SetByCaller.Key, SetByCaller.Value);
+			}
 			
 			AllEffects.Add(GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), TargetComponent));
 		}

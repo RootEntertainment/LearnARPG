@@ -63,7 +63,12 @@ public:
 	virtual float GetMaxShield() const;
 
 	UFUNCTION(BlueprintCallable)
-	virtual int32 GetLevel() const;
+	virtual int32 GetARPGLevel() const;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDamaged(float DamageAmount, AARPGCharacterBase* InstigatorPawn);
+
+	void HandleDamage(float DamageAmount, AARPGCharacterBase* InstigatorPawn);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

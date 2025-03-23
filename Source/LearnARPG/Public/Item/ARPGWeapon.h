@@ -10,6 +10,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class LEARNARPG_API UARPGWeapon : public UARPGItem
 {
@@ -24,5 +26,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Effects)
 	TMap<FGameplayTag, FARPGGameplayEffectContainer> WeaponEffects;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	EARPGWeapons WeaponType;
 };

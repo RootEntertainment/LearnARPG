@@ -8,6 +8,15 @@
 #include "ARPGAbilityTypes.h"
 #include "ARPGGameplayAbility.generated.h"
 
+USTRUCT(BlueprintType)
+struct FARPGSetByCaller
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag Key;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Value;
+};
 
 class AARPGCharacterBase;
 /**
@@ -45,5 +54,5 @@ protected:
 	int32 GetSuffixNumber(const FString& InString);
 
 	UFUNCTION(BlueprintCallable,Category="ARPGAbility")
-	TArray<FActiveGameplayEffectHandle> ApplyGameplayEffects(const FGameplayEventData& EventData, const FARPGGameplayEffectContainer& EffectContainer);
+	TArray<FActiveGameplayEffectHandle> ApplyGameplayEffects(const FGameplayEventData& EventData, const FARPGGameplayEffectContainer& EffectContainer, const TArray<FARPGSetByCaller> SetByCallers);
 };

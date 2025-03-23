@@ -46,6 +46,19 @@ public:
 	FGameplayAttributeData MaxShield;
 	ATTRIBUTE_ACCESSORS(UARPGCharacterAttributeSet, MaxShield)
 
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing=OnRep_Attack)
+	FGameplayAttributeData Attack;
+	ATTRIBUTE_ACCESSORS(UARPGCharacterAttributeSet, Attack)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing=OnRep_Defence)
+	FGameplayAttributeData Defence;
+	ATTRIBUTE_ACCESSORS(UARPGCharacterAttributeSet, Defence)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack")
+	FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UARPGCharacterAttributeSet, Damage)
+
+
 protected:
 	// These OnRep functions exist to make sure that the ability system internal representations are synchronized properly during replication
 	UFUNCTION()
@@ -59,5 +72,11 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_MaxShield(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_Attack(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_Defence(const FGameplayAttributeData& OldValue);
 	
 };

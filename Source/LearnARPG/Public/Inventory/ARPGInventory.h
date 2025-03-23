@@ -57,6 +57,7 @@ public:
 	{
 		return SlottedItems[SlotName];
 	}
+	//const void SetSlottedItem(FName SlotName, const FGuid& ItemGID);
 protected:
 	//Equips
 	//优化蓝图遍历

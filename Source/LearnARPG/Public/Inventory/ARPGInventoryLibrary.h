@@ -28,7 +28,7 @@ public:
 	static bool GiveItemsToInventory(UARPGInventory* Inventory, const FGuid& GID, int Count = 0);
 	
 	UFUNCTION(BlueprintCallable, Category = "ARPGInventory")
-	static bool ConsumeItemsInInventory(UARPGInventory* Inventory, const FGuid& GID, int Count = 0);
+	static bool ConsumeItemsInInventory(const FGuid& GID, int Count = 0, UARPGInventory* Inventory = nullptr);
 	
 	UFUNCTION(BlueprintCallable, Category = "ARPGInventory")
 	static bool SetSlottedItem(UARPGInventory* Inventory, FName SlotName, const FGuid& GID);
@@ -45,4 +45,6 @@ public:
 	static FGameplayAbilitySpecHandle GetSlottedAbilityHandlesByClass(AARPGCharacterBase* Character, FName SlotName, TSubclassOf<UARPGGameplayAbility> Class);
 	UFUNCTION(BlueprintCallable, Category = "ARPGInventory")
 	static void GetSlottedPrimaryAbilityHandleAndInstanceByClass(AARPGCharacterBase* Character, FName SlotName, TSubclassOf<UARPGGameplayAbility> Class, FGameplayAbilitySpecHandle& OutHandle, UARPGGameplayAbility*& OutAbilityInstance);
+
+	
 };

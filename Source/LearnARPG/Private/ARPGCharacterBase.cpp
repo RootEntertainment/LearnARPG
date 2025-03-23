@@ -19,6 +19,11 @@ AARPGCharacterBase::AARPGCharacterBase()
 	AttributeSet = CreateDefaultSubobject<UARPGCharacterAttributeSet>(TEXT("AttributeSet"));
 }
 
+void AARPGCharacterBase::HandleDamage(float DamageAmount, AARPGCharacterBase* InstigatorPawn)
+{
+	OnDamaged(DamageAmount, InstigatorPawn);
+}
+
 // Called when the game starts or when spawned
 void AARPGCharacterBase::BeginPlay()
 {
@@ -38,7 +43,7 @@ void AARPGCharacterBase::AddStartupGameplayAbilities()
 		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 		EffectContext.AddSourceObject(this);
 
-		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, GetLevel(), EffectContext);
+		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, GetARPGLevel(), EffectContext);
 		if (NewHandle.IsValid())
 		{
 			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent);
@@ -195,7 +200,7 @@ float AARPGCharacterBase::GetMaxShield() const
 	return AttributeSet->GetMaxShield();
 }
 
-int32 AARPGCharacterBase::GetLevel() const
+int32 AARPGCharacterBase::GetARPGLevel() const
 {
 	return CharacterLevel;
 }

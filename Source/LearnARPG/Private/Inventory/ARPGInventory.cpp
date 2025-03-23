@@ -99,3 +99,4 @@ void UARPGInventory::RemoveItem(const FARPGItemData& ARPGItemData)
 	TypedItems[ARPGItemData.ItemAssetId.PrimaryAssetType].Remove(ARPGItemData.GID);
 	//OnInventoryItemUpdateNative.Broadcast(ARPGItemData.GID);
 }
+

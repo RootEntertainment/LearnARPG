@@ -34,20 +34,24 @@ bool UARPGInventoryLibrary::GiveItemsToInventory(UARPGInventory* Inventory, cons
 	if(Item->IsConsumable())
 	{
 		bool bFound = false;
-		for(const FGuid& OtherGID : Inventory->ItemsMap[ItemData.ItemAssetId])
+		if(Inventory->ItemsMap.Contains(ItemData.ItemAssetId))
 		{
-			FARPGItemData& OtherItem = UARPGAssetManager::Get()->AllItemData[OtherGID];
-			if(OtherItem.IsSame(ItemData))
+			for(const FGuid& OtherGID : Inventory->ItemsMap[ItemData.ItemAssetId])
 			{
-				bFound = true;
-				InventoryGID = OtherGID;
+				FARPGItemData& OtherItem = UARPGAssetManager::Get()->AllItemData[OtherGID];
+				if(OtherItem.IsSame(ItemData))
+				{
+					bFound = true;
+					InventoryGID = OtherGID;
 				
-				OtherItem.Count += Count;
-				ItemData.Count -= Count;
+					OtherItem.Count += Count;
+					ItemData.Count -= Count;
 				
-				break;
+					break;
+				}
 			}
 		}
+		
 		if(!bFound)
 		{
 			ItemData.Count -= Count;
@@ -69,15 +73,20 @@ bool UARPGInventoryLibrary::GiveItemsToInventory(UARPGInventory* Inventory, cons
 	return true;
 }
 
-bool UARPGInventoryLibrary::ConsumeItemsInInventory(UARPGInventory* Inventory, const FGuid& GID, int Count)
+bool UARPGInventoryLibrary::ConsumeItemsInInventory(const FGuid& GID, int Count, UARPGInventory* Inventory)
 {
+	FARPGItemData& ItemData = UARPGAssetManager::Get()->AllItemData[GID];
+	if(!Inventory)
+	{
+		Inventory = ItemData.Inventory.Get();
+	}
 	if(!Inventory) return false;
 	if(!Inventory->OwnedItems.Contains(GID)) return false;
-	FARPGItemData& ItemData = UARPGAssetManager::Get()->AllItemData[GID];
 	if(ItemData.Count < Count) return false;
 	ItemData.Count -= Count;
 	if(Count == 0 || ItemData.Count == Count)
 	{
+		if(ItemData.Inventory.Get() && ItemData.CurrentSlot != NAME_None) RemoveSlottedItem(Inventory, ItemData.CurrentSlot);
 		Inventory->RemoveItem(ItemData);
 		ItemData.Inventory = nullptr;
 		//TODO: Remove Item Data
@@ -96,6 +105,34 @@ bool UARPGInventoryLibrary::SetSlottedItem(UARPGInventory* Inventory, FName Slot
 		!Inventory->SlotMap.Contains(SlotName) ||
 		ItemSlot.SlotType != ItemData.ItemAssetId.PrimaryAssetType) return false;
 
+
+	FGuid CurrentItemGID = Inventory->SlottedItems[SlotName];
+	if(CurrentItemGID == GID) return false;
+	
+	bool bFound = false;
+	for(TPair<FName, FGuid>& Pair: Inventory->SlottedItems)
+	{
+		if(Pair.Value == GID)
+		{
+			Pair.Value = CurrentItemGID;
+			if(CurrentItemGID.IsValid())
+			{
+				FARPGItemData& CurrentItemData = UARPGAssetManager::Get()->AllItemData[CurrentItemGID];
+				CurrentItemData.CurrentSlot = Pair.Key;
+				UARPGAssetManager::Get()->NotifyItemDataUpdate(CurrentItemGID);
+			}
+			Inventory->NotifySlottedItemUpdate(Pair.Key);
+			bFound = true;
+			break;
+		}
+	}
+	if(!bFound && CurrentItemGID.IsValid())
+	{
+		FARPGItemData& CurrentItemData = UARPGAssetManager::Get()->AllItemData[CurrentItemGID];
+		CurrentItemData.CurrentSlot = NAME_None;
+		UARPGAssetManager::Get()->NotifyItemDataUpdate(CurrentItemGID);
+	}
+	/*
 	FGuid CurrentItemGID = Inventory->SlottedItems[SlotName];
 	if (CurrentItemGID.IsValid())
 	{
@@ -119,6 +156,7 @@ bool UARPGInventoryLibrary::SetSlottedItem(UARPGInventory* Inventory, FName Slot
 			UARPGAssetManager::Get()->NotifyItemDataUpdate(CurrentItemGID);
 		}
 	}
+	*/
 	Inventory->SlottedItems[SlotName] = GID;
 	ItemData.CurrentSlot = SlotName;
 	UARPGAssetManager::Get()->NotifyItemDataUpdate(GID);
