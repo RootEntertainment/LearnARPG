@@ -21,7 +21,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FARPGItemSlot> NumOfSlots;
+
+	//deprecated
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FMovementSetting MovementSetting;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UDataTable* MovementDataTable;
 };

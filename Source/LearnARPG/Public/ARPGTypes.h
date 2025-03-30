@@ -33,6 +33,7 @@ enum class EARPGWeapons : uint8
 	Heavy,
 };
 
+//deprecated
 USTRUCT(BlueprintType)
 struct FMovementSetting
 {
